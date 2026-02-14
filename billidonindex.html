@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Pookie 🧸💖</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #ffc1e3, #ffe6f7);
+    text-align: center;
+    overflow: hidden;
+    color: #ff4da6;
+}
+
+.container {
+    margin-top: 30%;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+.name {
+    font-size: 34px;
+    font-weight: bold;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    margin: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#yes {
+    background: #ff66b3;
+    color: white;
+}
+
+#yes:hover {
+    transform: scale(1.1);
+}
+
+#no {
+    background: #ccc;
+    position: absolute;
+}
+
+.heart {
+    position: absolute;
+    font-size: 22px;
+    animation: float 5s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.message {
+    font-size: 18px;
+    margin-top: 20px;
+    min-height: 60px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container" id="main">
+    <h1>Hewwooo <span class="name">Billi Don 🐱🎀</span></h1>
+    <h2>Will chu be my pookie valentine? 🥺💖</h2>
+
+    <button id="yes" onclick="celebrate()">Yesss pookieee 🧸💞</button>
+    <button id="no" ontouchstart="moveButton()" onmouseover="moveButton()">Nooo 😝</button>
+</div>
+
+<audio id="bgMusic" loop>
+<source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const noBtn = document.getElementById("no");
+noBtn.style.top = "70%";
+noBtn.style.left = "50%";
+
+function moveButton() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+function celebrate() {
+    document.getElementById("bgMusic").play();
+    document.getElementById("main").innerHTML = `
+        <h1>YAYYYYYYY 🧸💖</h1>
+        <div class="message" id="loveText"></div>
+    `;
+    startConfetti();
+    setInterval(createHeart, 400);
+    typeMessage();
+}
+
+function typeMessage() {
+    const text = "Billi Don 🐱🎀 You are my fav human everrrr 🥺💞 I pwomise to always give chu cuddles and choco and all my loveeee 💖🧸";
+    let i = 0;
+    const speed = 40;
+    const target = document.getElementById("loveText");
+
+    function typing() {
+        if (i < text.length) {
+            target.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    typing();
+}
+
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+}
+
+function startConfetti() {
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let particles = [];
+
+    function createBurst() {
+        for (let i = 0; i < 80; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: 5,
+                color: `hsl(${Math.random()*360},100%,70%)`,
+                speedX: (Math.random() - 0.5) * 4,
+                speedY: (Math.random() - 0.5) * 4,
+                life: 100
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach((p,i)=>{
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x,p.y,p.size,p.size);
+            p.x+=p.speedX;
+            p.y+=p.speedY;
+            p.life--;
+            if(p.life<=0) particles.splice(i,1);
+        });
+        requestAnimationFrame(animate);
+    }
+
+    createBurst();
+    animate();
+}
+</script>
+
+</body>
+</html>
